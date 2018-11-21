@@ -8,10 +8,44 @@ local cfgs = {
   "H - Habilitar/desabilitar modo help"
 }
 
+local pieces = {}
+
+-- inicia tabuleiro vazio
+local board = {
+  {nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><king>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><king>",   "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><queen>",  "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><queen>",  "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
+  {nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil}
+}
+
+local images = {} -- tabela com as imagens
+
 function love.load()
-  love.window.setFullscreen(true)
+  --love.window.setFullscreen(true) -- //TODO HABILITAR
+  love.window.setMode(1280, 720) -- 720p para testes //TODO REMOVER
   glW = lg.getWidth()
   glH = lg.getHeight()
+  lg.setBackgroundColor(0.5, 0, 0)
+  images = {
+    white_fpawn = lg.newImage("pieces/white_fpawn.png"),
+    white_bpawn = lg.newImage("pieces/white_bpawn.png"),
+    white_rook = lg.newImage("pieces/white_rook.png"),
+    white_knight = lg.newImage("pieces/white_knight.png"),
+    white_bishop = lg.newImage("pieces/white_bishop.png"),
+    white_king = lg.newImage("pieces/white_king.png"),
+    white_queen = lg.newImage("pieces/white_queen.png"),
+    black_fpawn = lg.newImage("pieces/black_fpawn.png"),
+    black_bpawn = lg.newImage("pieces/black_bpawn.png"),
+    black_rook = lg.newImage("pieces/black_rook.png"),
+    black_knight = lg.newImage("pieces/black_knight.png"),
+    black_bishop = lg.newImage("pieces/black_bishop.png"),
+    black_king = lg.newImage("pieces/black_king.png"),
+    black_queen = lg.newImage("pieces/black_queen.png")
+  }
 end
 
 function love.update()
@@ -27,29 +61,27 @@ function love.draw()
   local ratio = glW/glH
   local ppH = 12 -- peça por height
   lg.scale(glW/(ratio * ppH), glH/ppH)
-  lg.translate((ratio * ppH/2) - 8, (ppH - 8)/2)
+  lg.translate((ratio * ppH/2) - 7, (ppH - 8)/2)
   lg.setColor(200/255, 170/255, 140/255)
-  lg.rectangle("fill", 0, 0, 16, 8)
+  lg.rectangle("fill", 0, 0, 14, 8)
   
+  -- funcao que desenha quadrado do tabuleiro
   local function desRec(i, j, r, g, b)
     lg.setColor(r/255, g/255, b/255)
-    lg.rectangle("fill", i, j, 1, 1)
+    lg.rectangle("fill", i - 1, j - 1, 1, 1)
   end
   
-  local function desCirc(i, j, r, g, b)
-    lg.setColor(r/255, g/255, b/255)
-    lg.circle("fill", i + 0.5, j + 0.5, 0.4)
-  end
-  -- itera linhas (j) e colunas (i)
-  for i = 0, 15 do
-    for j = 0, 7 do
-      if (i + j) % 2 == 0 then
-        desRec(i, j, 100, 70, 40) -- desenha retangulo
-        if j <= 2 then
-          desCirc(i, j, 0, 0, 0) -- desenha peÃ§a preta
-        elseif j >= 5 then
-          desCirc(i, j, 255, 255, 255) -- desenha peÃ§a branca
-        end
+  -- desenha tabuleiro
+  
+  for i = 1, 8 do
+    for j = 1, 14 do
+      if (i + j) % 2 == 1 then
+        desRec(j, i, 100, 70, 40) -- desenha retangulo
+      end
+      if board[i][j] then
+        local _, _, teamcolor, piecetype = board[i][j]:find("<(%a+)><(%a+)>")
+        lg.setColor(1, 1, 1)
+        lg.draw(images[teamcolor .. "_" .. piecetype], j - 1, i - 1, 0, 0.000485)
       end
     end
   end
