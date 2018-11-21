@@ -30,6 +30,11 @@ function love.load()
   glW = lg.getWidth()
   glH = lg.getHeight()
   lg.setBackgroundColor(0.5, 0, 0)
+  lg.setColor(0, 0.4, 0.5)
+  lg.rectangle("fill", 0, 0, glW, glH)
+  lg.setColor(0, 0, 0)
+  lg.print("loading...", glW/2, glH/2) -- //TODO DEIXAR LOADING SCREEN MAIS BONITA
+  lg.present()
   images = {
     white_fpawn  = lg.newImage("pieces/white_fpawn.png" ),
     white_bpawn  = lg.newImage("pieces/white_bpawn.png" ),
@@ -46,6 +51,7 @@ function love.load()
     black_king   = lg.newImage("pieces/black_king.png"  ),
     black_queen  = lg.newImage("pieces/black_queen.png" )
   }
+  lg.clear()
 end
 
 function love.update()
