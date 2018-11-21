@@ -31,20 +31,20 @@ function love.load()
   glH = lg.getHeight()
   lg.setBackgroundColor(0.5, 0, 0)
   images = {
-    white_fpawn = lg.newImage("pieces/white_fpawn.png"),
-    white_bpawn = lg.newImage("pieces/white_bpawn.png"),
-    white_rook = lg.newImage("pieces/white_rook.png"),
+    white_fpawn  = lg.newImage("pieces/white_fpawn.png" ),
+    white_bpawn  = lg.newImage("pieces/white_bpawn.png" ),
+    white_rook   = lg.newImage("pieces/white_rook.png"  ),
     white_knight = lg.newImage("pieces/white_knight.png"),
     white_bishop = lg.newImage("pieces/white_bishop.png"),
-    white_king = lg.newImage("pieces/white_king.png"),
-    white_queen = lg.newImage("pieces/white_queen.png"),
-    black_fpawn = lg.newImage("pieces/black_fpawn.png"),
-    black_bpawn = lg.newImage("pieces/black_bpawn.png"),
-    black_rook = lg.newImage("pieces/black_rook.png"),
+    white_king   = lg.newImage("pieces/white_king.png"  ),
+    white_queen  = lg.newImage("pieces/white_queen.png" ),
+    black_fpawn  = lg.newImage("pieces/black_fpawn.png" ),
+    black_bpawn  = lg.newImage("pieces/black_bpawn.png" ),
+    black_rook   = lg.newImage("pieces/black_rook.png"  ),
     black_knight = lg.newImage("pieces/black_knight.png"),
     black_bishop = lg.newImage("pieces/black_bishop.png"),
-    black_king = lg.newImage("pieces/black_king.png"),
-    black_queen = lg.newImage("pieces/black_queen.png")
+    black_king   = lg.newImage("pieces/black_king.png"  ),
+    black_queen  = lg.newImage("pieces/black_queen.png" )
   }
 end
 
