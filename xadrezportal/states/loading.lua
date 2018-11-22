@@ -62,7 +62,7 @@ end
 function loading.update()
   if #vars.imagesToLoad > 0 then
     local name = table.remove(vars.imagesToLoad, 1)
-    vars.images[name] = lg.newImage("pieces/" .. name .. ".png");
+    vars.images[name] = lg.newImage("resources/pieces/" .. name .. ".png");
     vars.loaded = vars.loaded + 1
     return
   end
