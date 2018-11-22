@@ -6,32 +6,31 @@ local drawStates = require "drawStates" -- modulo das funções de draw
 local lg = love.graphics
 
 function love.update(dt)
-	if vars.gameState == "loading" and #vars.imagesToLoad > 0 then
-		local name = table.remove(vars.imagesToLoad, 1)
-		vars.images[name] = lg.newImage("pieces/" .. name .. ".png");
-		vars.loaded = vars.loaded + 1
-		return
+	-- estado de loading
+	if vars.gameState == "loading" then
+		if #vars.imagesToLoad > 0 then
+			local name = table.remove(vars.imagesToLoad, 1)
+			vars.images[name] = lg.newImage("pieces/" .. name .. ".png");
+			vars.loaded = vars.loaded + 1
+			return
+		end
+		vars.gameState = "playing"
 	end
-	vars.gameState = "playing"
 end
 
 function love.load()
-	--love.window.setFullscreen(true) -- //TODO HABILITAR
+	-- love.window.setFullscreen(true) -- //TODO HABILITAR
 	love.window.setMode(1280, 720) -- 720p para testes //TODO REMOVER
 	vars.glW = lg.getWidth()
 	vars.glH = lg.getHeight()
+
+	-- obs: o loading de imagens é feito na love.update() se o estado for "loading"
 
 	lg.setBackgroundColor(0.5, 0, 0)
 end
 
 function love.draw() 
-	if vars.gameState == "loading" then
-		drawStates.loading()
-	elseif vars.gameState == "playing" then
-		drawStates.playing()
-	elseif vars.gameState == "menu" then
-		drawStates.loading()
-	end
+	drawStates[vars.gameState]() -- chama a função draw específica para o estado atual
 end
 
 function love.keypressed(key, scancode, isrepeat)

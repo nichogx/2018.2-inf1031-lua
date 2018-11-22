@@ -3,6 +3,8 @@ local vars = {}
 
 --[[
 
+Descrição do Módulo:
+
 com o objetivo de não utilizar em excesso variáveis globais,
 esse módulo guarda todas as variáveis comuns a mais de um módulo
 a serem utilizadas no código

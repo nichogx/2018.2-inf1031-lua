@@ -1,6 +1,20 @@
 -- modulo
 local drawStates = {}
 
+--[[
+
+Descrição do Módulo:
+
+este módulo contém todas as funções de draw que serão chamadas
+pela draw do love dependendo do estado do programa.
+Os estados aceitos são:
+ - loading
+ - playing
+ - menu // TODO IMPLEMENTAR
+ // TODO COLOCAR TODOS OS ESTADOS ACEITOS
+
+]]--
+
 -- love graphics shortcut
 local lg = love.graphics
 
@@ -9,30 +23,45 @@ local vars = require "vars"
 
 -- função de estado LOADING
 function drawStates.loading()
-	-- faz um background
-	lg.setColor(0, 0.4, 0.5)
+	local percLoad = vars.loaded/vars.loadsteps
+
+	-- desenha background da tela de loading
+	lg.setColor(0, 0.4, 0.5) -- cor sólida da tela de loading
 	lg.rectangle("fill", 0, 0, vars.glW, vars.glH)
 
 	-- faz os textos (na draw mesmo, pois como o estado loading é rápido,
 	-- não justifica criar os textos fora. Não importa muito performance nesse
 	-- estado)
-	lg.setColor(1, 1, 1)
 	local loadFont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 30)
 	local loadText = lg.newText(loadFont, "INICIANDO JOGO...")
 
 	local loadStepsFont = lg.newFont("resources/Lato-Font/Lato-Light.ttf", 20)
-	local loadStepsText = lg.newText(loadStepsFont, string.format("%d%%", (vars.loaded/vars.loadsteps) * 100))
+	local loadStepsText = lg.newText(loadStepsFont, string.format("%d%%", (percLoad) * 100))
 
-	-- desenha os textos
+	-- desenha o texto loading
 	local txtW, txtH
+	lg.setColor(1, 1, 1) -- cor do texto loading
 	txtW, txtH = loadText:getDimensions()
 	lg.draw(loadText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2)
-	txtW, txtH = loadStepsText:getDimensions()
-	lg.draw(loadStepsText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 + vars.glH/20)
 
 	-- desenha barra de loading
+	lg.setColor(0.9, 0.9, 0.9) -- cor da barra externa
+	local extBarW = vars.glW/3;
+	local extBarH = vars.glH/20;
+	lg.rectangle("fill", vars.glW/2 - extBarW/2, vars.glH/2 - extBarH/2 + vars.glH/18, extBarW, extBarH);
+	lg.setColor(0.6, 0.6, 0.6) -- cor da barra interna
+	local intBarW = vars.glW/3 - 10; 
+	local intBarH = vars.glH/20 - 10;
+	lg.rectangle("fill", vars.glW/2 - intBarW/2, vars.glH/2 - intBarH/2 + vars.glH/18, intBarW * percLoad, intBarH);
 
-	-- //TODO colocar barrinha de loading
+	-- desenha texto da porcentagem de loading
+	lg.setColor(0, 0, 0); -- cor da porcentagem de loading
+	txtW, txtH = loadStepsText:getDimensions()
+	lg.draw(loadStepsText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 + vars.glH/18)
+end
+
+-- função de estado MENU
+function drawStates.menu()
 end
 
 -- função de estado PLAYING
