@@ -36,7 +36,7 @@ function drawStates.loading()
 	local loadText = lg.newText(loadFont, "INICIANDO JOGO...")
 
 	local loadStepsFont = lg.newFont("resources/Lato-Font/Lato-Light.ttf", 20)
-	local loadStepsText = lg.newText(loadStepsFont, string.format("%d%%", (percLoad) * 100))
+	local loadStepsText = lg.newText(loadStepsFont, string.format("%d/%d (%d%%)", vars.loaded, vars.loadsteps, (percLoad) * 100))
 
 	-- desenha o texto loading
 	local txtW, txtH
