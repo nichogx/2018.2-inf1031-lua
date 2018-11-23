@@ -15,16 +15,9 @@ uma mousepressed(), mesmo que vazias.
 ]]--
 local stateList = {"loading", "menu", "playing"}
 local states = {}
-for i, v in ipairs(stateList) do
-	states[v] = require ("states/" .. v)
-	assert(states[v].draw, "draw não encontrada no arquivo " .. v .. ".lua")
-	assert(states[v].update, "update não encontrada no arquivo " .. v .. ".lua")
-	assert(states[v].keypressed, "keypressed não encontrada no arquivo " .. v .. ".lua")
-	assert(states[v].mousepressed, "mousepressed não encontrada no arquivo " .. v .. ".lua")
-end
 
 function love.update(dt)
-	states[vars.gameState].update()
+	states[vars.gameState].update(dt) -- chama a função update específica para o estado atual
 end
 
 function love.load()
@@ -33,7 +26,13 @@ function love.load()
 	vars.glW = lg.getWidth()
 	vars.glH = lg.getHeight()
 
-	-- obs: o loading de imagens é feito na love.update() se o estado for "loading"
+	for i, v in ipairs(stateList) do
+		states[v] = require ("states/" .. v)
+		assert(states[v].draw, "draw não encontrada no arquivo " .. v .. ".lua")
+		assert(states[v].update, "update não encontrada no arquivo " .. v .. ".lua")
+		assert(states[v].keypressed, "keypressed não encontrada no arquivo " .. v .. ".lua")
+		assert(states[v].mousepressed, "mousepressed não encontrada no arquivo " .. v .. ".lua")
+	end
 
 	lg.setBackgroundColor(0.5, 0, 0)
 end
@@ -43,7 +42,9 @@ function love.draw()
 end
 
 function love.keypressed(key, scancode, isrepeat)
-	if key == "escape" then
-		love.event.quit()
-	end
+	states[vars.gameState].keypressed(key, scancode, isrepeat) -- chama a função keypressed específica para o estado atual
+end
+
+function love.mousepressed(x, y, button)
+	states[vars.gameState].mousepressed(x, y, button) -- chama a função mousepressed específica para o estado atual
 end

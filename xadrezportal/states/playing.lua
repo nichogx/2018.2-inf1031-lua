@@ -51,7 +51,7 @@ function playing.draw()
 			if vars.board[i][j] then
 				local _, _, teamcolor, piecetype = vars.board[i][j]:find("<(%a+)><(%a+)>")
 				lg.setColor(1, 1, 1)
-				lg.draw(vars.images[teamcolor .. "_" .. piecetype], j - 1, i - 1, 0, 0.000485)
+				lg.draw(vars.pieceImages[teamcolor .. "_" .. piecetype], j - 1, i - 1, 0, 0.000485)
 			end
 		end
 	end
@@ -59,13 +59,16 @@ function playing.draw()
 	lg.pop()
 end
 
-function playing.update()
+function playing.update(dt)
 end
 
-function playing.keypressed()
+function playing.keypressed(key, scancode, isrepeat)
+	if key == "escape" then
+		love.event.quit()
+	end
 end
 
-function playing.mousepressed()
+function playing.mousepressed(x, y, button)
 end
 
 -- modulo

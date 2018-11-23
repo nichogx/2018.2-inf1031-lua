@@ -59,20 +59,27 @@ function loading.draw()
 	lg.draw(loadStepsText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 + vars.glH/18)
 end
 
-function loading.update()
-  if #vars.imagesToLoad > 0 then
-    local name = table.remove(vars.imagesToLoad, 1)
-    vars.images[name] = lg.newImage("resources/pieces/" .. name .. ".png");
+function loading.update(dt)
+	if #vars.genImagesToLoad > 0 then
+		local name = table.remove(vars.genImagesToLoad, 1)
+		vars.genImages[name] = lg.newImage("resources/" .. name .. ".png")
+		vars.loaded = vars.loaded + 1
+		return
+	end
+  if #vars.pieceImagesToLoad > 0 then
+    local name = table.remove(vars.pieceImagesToLoad, 1)
+    vars.pieceImages[name] = lg.newImage("resources/pieces/" .. name .. ".png");
     vars.loaded = vars.loaded + 1
     return
   end
-  vars.gameState = "playing" -- iniciar jogo após load
+	assert(vars.loaded == vars.loadsteps, "Não foi possível completar o processo de carregamento.")
+  vars.gameState = "menu" -- mandar para o menu após load
 end
 
-function loading.keypressed()
+function loading.keypressed(key, scancode, isrepeat)
 end
 
-function loading.mousepressed()
+function loading.mousepressed(x, y, button)
 end
 
 -- modulo
