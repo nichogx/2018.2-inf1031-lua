@@ -23,16 +23,20 @@ vars.cfgs = {
 -- coloca no estado inicial
 vars.gameState = "loading"
 
-vars.board = { -- tabuleiro (indexado ao contrário do love: primeiro linha, depois coluna)
-	{nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><king>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><king>",   "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><queen>",  "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><queen>",  "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
-	{nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil}
-}
+vars.board = {} -- tabuleiro (indexado ao contrário do love: primeiro linha, depois coluna)
+function vars.resetBoard()
+	vars.board = { -- tabuleiro (indexado ao contrário do love: primeiro linha, depois coluna)
+		{nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><king>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><king>",   "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><queen>",  "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><queen>",  "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><bishop>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><bishop>", "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><knight>", "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><knight>", "<white><bpawn>", nil, nil},
+		{nil, nil, "<black><bpawn>", "<black><rook>",   "<black><fpawn>", nil, nil, nil, nil, "<white><fpawn>", "<white><rook>",   "<white><bpawn>", nil, nil}
+	}
+end
+vars.resetBoard()
 
 vars.pieceImages = {} -- tabela onde serão inseridas as imagens das peças
 vars.genImages = {}   -- tabela onde serão inseridas as imagens gerais
