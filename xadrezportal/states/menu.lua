@@ -22,39 +22,74 @@ Contém:
 ]]--
 
 local function newMenuText(n, option, action)
-  local font = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 30)
-  local text = lg.newText(font, option)
-  local dimX, dimY = text:getDimensions()
-  local pos = {vars.glW/2 - dimX/2, vars.glH/6 + (n + 4) * vars.glH/15}
-  return { text = text, action = action, pos = pos, dimensions = {dimX, dimY} }
+	local font = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 30)
+	local text = lg.newText(font, option)
+	local dimX, dimY = text:getDimensions()
+	local pos = {vars.glW/2 - dimX/2, vars.glH/6 + (n + 4) * vars.glH/15}
+	return { text = text, action = action, pos = pos, 
+					 dimensions = {dimX, dimY}, selected = false }
+	
 end
 
 local menuoptions = {
-  newMenuText(1, "iniciar", function () 
-    vars.gameState = "playing"
-  end),
-  newMenuText(2, "sair", function () 
-    love.event.quit()
-  end)
+	newMenuText(1, "iniciar", function () 
+		vars.gameState = "playing"
+	end),
+	newMenuText(2, "sair", function () 
+		love.event.quit()
+	end)
 }
+menuoptions[1].selected = true;
 
 function menu.draw()
-  lg.setColor(1, 1, 1)
-  local logoW, logoH = vars.genImages.logo:getDimensions();
-  local scale = vars.glH/logoW * 0.6
-  lg.draw(vars.genImages.logo, vars.glW/2 - (scale * logoW)/2, 2 * vars.glH/6 - (scale * logoH)/2, 0, scale)
+	lg.setColor(1, 1, 1)
+	local logoW, logoH = vars.genImages.logo:getDimensions();
+	local scale = vars.glH/logoW * 0.6
+	lg.draw(vars.genImages.logo, vars.glW/2 - (scale * logoW)/2, 2 * vars.glH/6 - (scale * logoH)/2, 0, scale)
   
-  for i, v in ipairs(menuoptions) do
-    lg.draw(v.text, v.pos[1], v.pos[2])
-  end
+	for i, v in ipairs(menuoptions) do
+		if v.selected then
+			lg.setColor(0, 0, 0)
+			lg.rectangle("fill", v.pos[1], v.pos[2], v.dimensions[1], v.dimensions[2])
+		end
+		lg.setColor(1, 1, 1)
+		lg.draw(v.text, v.pos[1], v.pos[2])
+	end
 end
 
 function menu.update(dt)
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-	if key == "escape" then
-		love.event.quit()
+	local function moveDown(int)
+		for i, v in ipairs(menuoptions) do
+			local newPos = i + int
+			if v.selected then
+				if newPos < 1 then
+					newPos = #menuoptions
+				end
+				
+				if newPos > #menuoptions then
+					newPos = 1
+				end
+				
+				v.selected = false
+				menuoptions[newPos].selected = true
+				break;
+			end
+		end
+	end
+	
+	if key == "down" then
+		moveDown(1)
+	elseif key == "up" then
+		moveDown(-1)
+	elseif key == "return" then
+		for i, v in ipairs(menuoptions) do
+			if v.selected then
+				v.action()
+			end
+		end
 	end
 end
 

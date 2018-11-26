@@ -64,7 +64,7 @@ end
 
 function playing.keypressed(key, scancode, isrepeat)
 	if key == "escape" then
-		love.event.quit()
+		vars.gameState = "menu"
 	end
 end
 
