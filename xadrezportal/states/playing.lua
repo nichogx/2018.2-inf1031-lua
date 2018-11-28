@@ -26,6 +26,22 @@ Contém:
 
 local coisa = {0, 0} -- TODO TIRAR
 
+local function move(src1, src2, dest1, dest2)
+	local str = string.format('<move><%s><%d><%d><%d><%d>', vars.player, src1, src2, dest1, dest2)
+	msgr.sendMessage(str, 'portalchess01020304')
+end
+
+function playing.msgReceived(message)
+	local _, _, msgType = message:find("<(%a+)>")
+	if msgType == 'move' then
+		local _, _, _, player, src1, src2, dest1, dest2 = message:find("<(%a+)><(%a+)><(%d+)><(%d+)><(%d+)><(%d+)>")
+		src1 = tonumber(src1); src2 = tonumber(src2)
+		dest1 = tonumber(dest1); dest2 = tonumber(dest2)
+		vars.board[src1][src2] = vars.board[dest1][dest2]
+		vars.board[dest1][dest2] = nil
+	end
+end
+
 function playing.draw()
 	lg.setColor(1, 1, 1)
 	for i, v in ipairs(vars.cfgs) do
@@ -69,6 +85,7 @@ function playing.draw()
 end
 
 function playing.update(dt)
+	msgr.checkMessages()
 end
 
 function playing.keypressed(key, scancode, isrepeat)
@@ -92,8 +109,7 @@ function playing.mousepressed(x, y, button)
 		if not selected[1] and vars.board[y][x] then -- nada selecionado, existe peça: selecionar
 			selected = {x, y}
 		elseif selected[1] and (y ~= selected[2] or x ~= selected[1]) and true then -- movimento válido, mover
-			vars.board[y][x] = vars.board[selected[2]][selected[1]]
-			vars.board[selected[2]][selected[1]] = nil
+			move(y, x, selected[2], selected[1])
 			selected = {}
 		else -- movimento invalido, tirar selecionamento
 			selected = {}

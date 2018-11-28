@@ -14,6 +14,8 @@ a serem utilizadas no código
 vars.glW = 0
 vars.glH = 0
 
+vars.player = 'white'
+
 vars.cfgs = {
 	"esc - Sair",
 	"R - Recomeçar",

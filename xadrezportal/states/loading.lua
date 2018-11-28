@@ -35,7 +35,12 @@ function loading.draw()
 	local loadText = lg.newText(loadFont, "INICIANDO JOGO...")
 
 	local loadStepsFont = lg.newFont("resources/Lato-Font/Lato-Light.ttf", 20)
-	local loadStepsText = lg.newText(loadStepsFont, string.format("%d/%d (%d%%)", vars.loaded, vars.loadsteps, (percLoad) * 100))
+	local loadStepsText
+	if percLoad < 0.999 then
+		loadStepsText = lg.newText(loadStepsFont, string.format("%d/%d (%d%%)", vars.loaded, vars.loadsteps, (percLoad) * 100))
+	else
+		loadStepsText = lg.newText(loadStepsFont, "conectando ao servidor...")
+	end
 
 	-- desenha o texto loading
 	local txtW, txtH
@@ -66,14 +71,17 @@ function loading.update(dt)
 		vars.loaded = vars.loaded + 1
 		return
 	end
-  if #vars.pieceImagesToLoad > 0 then
-    local name = table.remove(vars.pieceImagesToLoad, 1)
-    vars.pieceImages[name] = lg.newImage("resources/pieces/" .. name .. ".png");
-    vars.loaded = vars.loaded + 1
-    return
-  end
+	if #vars.pieceImagesToLoad > 0 then
+		local name = table.remove(vars.pieceImagesToLoad, 1)
+		vars.pieceImages[name] = lg.newImage("resources/pieces/" .. name .. ".png");
+		vars.loaded = vars.loaded + 1
+		return
+  	end
+
+	msgr.start("portalchess01020304" .. vars.player, "portalchess01020304",  msgReceived)
+
 	assert(vars.loaded == vars.loadsteps, "Não foi possível completar o processo de carregamento.")
-  vars.gameState = "menu" -- mandar para o menu após load
+	vars.gameState = "menu" -- mandar para o menu após load
 end
 
 function loading.keypressed(key, scancode, isrepeat)

@@ -1,5 +1,6 @@
 -- import de modulos
 local vars = require "vars"             -- modulo das variaveis
+msgr = require "mqtt/mqttLoveLibrary"   -- mqtt (global)
 
 -- love graphics shortcut
 local lg = love.graphics
@@ -15,6 +16,12 @@ uma mousepressed(), mesmo que vazias.
 ]]--
 local stateList = {"loading", "menu", "playing"}
 local states = {}
+
+function msgReceived(message)
+	if states[vars.gameState].msgReceived then
+		states[vars.gameState].msgReceived(message)
+	end
+end
 
 function love.update(dt)
 	states[vars.gameState].update(dt) -- chama a função update específica para o estado atual
