@@ -20,7 +20,7 @@ Contém:
   menu.mousepressed()
 
 ]]--
-local menuoptions
+local menuoptions, fillMenu
 local function newMenuText(n, option, action)
 	local font = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 30)
 	local text = lg.newText(font, option)
@@ -31,32 +31,39 @@ local function newMenuText(n, option, action)
 	
 end
 
-menuoptions = {
-	newMenuText(1, "iniciar", function ()
-		vars.gameState = "playing"
-	end),
-	newMenuText(2, "sair", function ()
-		love.event.quit()
-	end),
-	newMenuText(3, "player: " .. vars.player, function ()
-		if vars.player == 'white' then vars.player = 'black'
-		else vars.player = 'white' end
+fillMenu = function()
+	menuoptions = {
+		newMenuText(1, "iniciar", function ()
+			vars.gameState = "playing"
+		end),
+		newMenuText(2, "sair", function ()
+			love.event.quit()
+		end),
+		newMenuText(3, "player: " .. vars.player, function ()
+			if vars.player == 'white' then vars.player = 'black'
+			else vars.player = 'white' end
 
-		menuoptions[3].text:set('player: ' .. vars.player)
-	end),
-	newMenuText(4, "fullscreen: " .. tostring(vars.fullscreen), function () -- // TODO deixar bom ou tirar
-		vars.fullscreen = not vars.fullscreen
-		if vars.fullscreen then
-			vars.glW, vars.glH = lg.getDimensions()
-			love.window.setMode(vars.glW, vars.glH)
-		else
-			love.window.setMode(1280, 720)
-		end
-		love.window.setFullscreen(vars.fullscreen)
+			menuoptions[3].text:set('player: ' .. vars.player)
+		end),
+		newMenuText(4, "fullscreen: " .. tostring(vars.fullscreen), function () -- // TODO deixar bom ou tirar
+			vars.fullscreen = not vars.fullscreen
+			if vars.fullscreen then
+				love.window.setMode(0, 0)
+				vars.glW, vars.glH = lg.getDimensions()
+			else
+				love.window.setMode(1280, 720)
+				vars.glW, vars.glH = lg.getDimensions()
+			end
+			fillMenu()
+			menuoptions[4].selected = true;
+			love.window.setFullscreen(vars.fullscreen)
 
-		menuoptions[4].text:set('fullscreen: ' .. tostring(vars.fullscreen))
-	end),
-}
+			menuoptions[4].text:set('fullscreen: ' .. tostring(vars.fullscreen))
+		end),
+	}
+end
+
+fillMenu()
 menuoptions[1].selected = true;
 
 function menu.draw()

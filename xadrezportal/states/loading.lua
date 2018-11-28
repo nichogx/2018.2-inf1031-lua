@@ -61,6 +61,7 @@ function loading.draw()
 	-- desenha texto da porcentagem de loading
 	lg.setColor(0, 0, 0); -- cor da porcentagem de loading
 	txtW, txtH = loadStepsText:getDimensions()
+
 	lg.draw(loadStepsText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 + vars.glH/18)
 end
 

@@ -28,8 +28,8 @@ function love.update(dt)
 end
 
 function love.load()
-	-- love.window.setFullscreen(true) -- //TODO HABILITAR
-	love.window.setMode(1280, 720) -- 720p para testes //TODO REMOVER
+	love.window.setMode(1280, 720)
+	love.window.setFullscreen(vars.fullscreen)
 	vars.glW = lg.getWidth()
 	vars.glH = lg.getHeight()
 

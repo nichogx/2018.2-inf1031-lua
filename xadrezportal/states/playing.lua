@@ -114,7 +114,6 @@ function playing.mousepressed(x, y, button)
 	and vars.turn == vars.player then
 		if not selected[1] and vars.board[y][x] then -- nada selecionado, existe peça: selecionar
 			local _, _, team = vars.board[y][x]:find("<(%a+)>")
-			print(team)
 			if vars.player == team then
 				selected = {x, y}
 			else
