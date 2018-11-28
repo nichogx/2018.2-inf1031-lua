@@ -38,7 +38,7 @@ function vars.resetBoard()
 		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
 		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
 		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
-		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
+		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil}
 	}
 end
 vars.resetBoard()
