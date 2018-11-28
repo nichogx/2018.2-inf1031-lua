@@ -39,6 +39,10 @@ function playing.msgReceived(message)
 		dest1 = tonumber(dest1); dest2 = tonumber(dest2)
 		vars.board[src1][src2] = vars.board[dest1][dest2]
 		vars.board[dest1][dest2] = nil
+
+		-- trocar a vez segundo critérios
+		if player == 'white' then vars.turn = 'black'
+		else vars.turn = 'white' end
 	end
 end
 
@@ -93,6 +97,7 @@ function playing.keypressed(key, scancode, isrepeat)
 		vars.gameState = "menu"
 	elseif key == 'r' then
 		vars.resetBoard()
+		vars.turn = 'white'
 	end
 end
 
@@ -105,9 +110,16 @@ function playing.mousepressed(x, y, button)
 	coisa = {x, y} -- TODO TIRAR
 	
 	if x >= 1 and x <= 14 
-	and y >= 1 and y <= 8 then
+	and y >= 1 and y <= 8 
+	and vars.turn == vars.player then
 		if not selected[1] and vars.board[y][x] then -- nada selecionado, existe peça: selecionar
-			selected = {x, y}
+			local _, _, team = vars.board[y][x]:find("<(%a+)>")
+			print(team)
+			if vars.player == team then
+				selected = {x, y}
+			else
+				selected = {}
+			end
 		elseif selected[1] and (y ~= selected[2] or x ~= selected[1]) and true then -- movimento válido, mover
 			move(y, x, selected[2], selected[1])
 			selected = {}

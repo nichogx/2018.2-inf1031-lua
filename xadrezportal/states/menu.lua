@@ -20,7 +20,7 @@ Contém:
   menu.mousepressed()
 
 ]]--
-
+local menuoptions
 local function newMenuText(n, option, action)
 	local font = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 30)
 	local text = lg.newText(font, option)
@@ -31,13 +31,31 @@ local function newMenuText(n, option, action)
 	
 end
 
-local menuoptions = {
-	newMenuText(1, "iniciar", function () 
+menuoptions = {
+	newMenuText(1, "iniciar", function ()
 		vars.gameState = "playing"
 	end),
-	newMenuText(2, "sair", function () 
+	newMenuText(2, "sair", function ()
 		love.event.quit()
-	end)
+	end),
+	newMenuText(3, "player: " .. vars.player, function ()
+		if vars.player == 'white' then vars.player = 'black'
+		else vars.player = 'white' end
+
+		menuoptions[3].text:set('player: ' .. vars.player)
+	end),
+	newMenuText(4, "fullscreen: " .. tostring(vars.fullscreen), function () -- // TODO deixar bom ou tirar
+		vars.fullscreen = not vars.fullscreen
+		if vars.fullscreen then
+			vars.glW, vars.glH = lg.getDimensions()
+			love.window.setMode(vars.glW, vars.glH)
+		else
+			love.window.setMode(1280, 720)
+		end
+		love.window.setFullscreen(vars.fullscreen)
+
+		menuoptions[4].text:set('fullscreen: ' .. tostring(vars.fullscreen))
+	end),
 }
 menuoptions[1].selected = true;
 
