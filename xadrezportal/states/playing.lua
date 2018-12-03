@@ -37,8 +37,8 @@ function playing.msgReceived(message)
 		local _, _, _, player, src1, src2, dest1, dest2 = message:find("<(%a+)><(%a+)><(%d+)><(%d+)><(%d+)><(%d+)>")
 		src1 = tonumber(src1); src2 = tonumber(src2)
 		dest1 = tonumber(dest1); dest2 = tonumber(dest2)
-		vars.board[src1][src2] = vars.board[dest1][dest2]
-		vars.board[dest1][dest2] = nil
+		vars.board[dest2][dest1] = vars.board[src2][src1]
+		vars.board[src2][src1] = nil
 
 		-- trocar a vez segundo critérios
 		if player == 'white' then vars.turn = 'black'
@@ -101,6 +101,11 @@ function playing.keypressed(key, scancode, isrepeat)
 	end
 end
 
+-- funções estão no final
+local validMove
+local validMoveNoEatables
+local getEatables
+
 function playing.mousepressed(x, y, button)
 	local ratio = vars.glW/vars.glH
 	local ppH = 12 -- peça por height
@@ -119,8 +124,10 @@ function playing.mousepressed(x, y, button)
 			else
 				selected = {}
 			end
-		elseif selected[1] and (y ~= selected[2] or x ~= selected[1]) and true then -- movimento válido, mover
-			move(y, x, selected[2], selected[1])
+		elseif selected[1] and (y ~= selected[2] or x ~= selected[1])
+		and validMove(selected[1], selected[2], x, y) then -- movimento válido, mover
+			if x > 14 then x = x % 14 end			
+			move(selected[1], selected[2], x, y)
 			selected = {}
 		else -- movimento invalido, tirar selecionamento
 			selected = {}
@@ -128,6 +135,64 @@ function playing.mousepressed(x, y, button)
 	else
 		selected = {}
 	end
+end
+
+validMoveNoEatables = function(srcX, srcY, destX, destY)
+	if (destX + destY) % 2 == 0 or vars.board[destY][destX] then 
+		return false
+	end	
+	
+	if (math.abs(srcX - destX) > 1 and math.abs(srcX - destX) < 13)
+	or math.abs(srcY - destY) > 1 then
+		return false
+	end
+	
+	return true
+end
+
+getEatables = function(srcX, srcY, opt)
+	local eatables = {}
+	for i = 1, #opt do
+		local x = opt[i][1]
+		local y = opt[i][2]
+		if vars.board[y][x] then
+			local _, _, teamcolor = vars.board[y][x]:find("<(%a+)>")
+			if teamcolor ~= vars.player
+			and validMoveNoEatables(x, y, x + (x - srcX), y + (y - srcY)) then
+				eatables[#eatables + 1] = {x, y, x + (x - srcX), y + (y - srcY)}
+				print(x, y, x + (x - srcX), y + (y - srcY))
+			end
+		end
+	end
+	return eatables
+end
+
+validMove = function(srcX, srcY, destX, destY)
+	local opt = {}
+	opt[1] = {srcX + 1, srcY + 1}
+	opt[2] = {srcX - 1, srcY + 1}
+	opt[3] = {srcX + 1, srcY - 1}
+	opt[4] = {srcX - 1, srcY - 1}
+	
+	for i = 1, #opt do
+		if opt[i][1] > 14 then opt[i][1] = opt[i][1] % 14 end
+		if opt[i][1] < 1  then opt[i][1] = 14 - opt[i][1] end
+	end
+	
+	-- da pra comer?
+	local eatables = getEatables(srcX, srcY, opt)
+	
+	if #eatables ~= 0 then
+		for i = 1, #eatables do
+			if destX == eatables[i][3] and destY == eatables[i][4] then
+				return {eatables[i][1], eatables[i][2]}
+			end
+		end
+
+		return false
+	end
+
+	return validMoveNoEatables(srcX, srcY, destX, destY)
 end
 
 -- modulo

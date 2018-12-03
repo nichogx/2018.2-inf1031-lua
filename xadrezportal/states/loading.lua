@@ -79,7 +79,7 @@ function loading.update(dt)
 		return
   	end
 
-	msgr.start("portalchess01020304" .. vars.player, "portalchess01020304",  msgReceived)
+	msgr.start("portalchess01020304" .. math.random(99999), "portalchess01020304",  msgReceived)
 
 	assert(vars.loaded == vars.loadsteps, "Não foi possível completar o processo de carregamento.")
 	vars.gameState = "menu" -- mandar para o menu após load
