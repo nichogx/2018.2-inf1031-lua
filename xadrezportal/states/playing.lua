@@ -20,7 +20,7 @@ Contém:
   playing.draw()
   playing.update()
   playing.keypressed()
-  playing.mousepressed()
+  playing.mousepressed() -- TODO ATUALIZAR TODOS ESSES e colocar título na janela
 
 ]]--
 
@@ -28,6 +28,16 @@ local coisa = {0, 0} -- TODO TIRAR
 
 local function move(src1, src2, dest1, dest2)
 	local str = string.format('<move><%s><%d><%d><%d><%d>', vars.player, src1, src2, dest1, dest2)
+	msgr.sendMessage(str, 'portalchess01020304')
+end
+
+local function kill(x, y)
+	local str = string.format('<kill><%d><%d>', x, y)
+	msgr.sendMessage(str, 'portalchess01020304')
+end
+
+local function restart()
+	local str = string.format('<restart>')
 	msgr.sendMessage(str, 'portalchess01020304')
 end
 
@@ -43,6 +53,14 @@ function playing.msgReceived(message)
 		-- trocar a vez segundo critérios
 		if player == 'white' then vars.turn = 'black'
 		else vars.turn = 'white' end
+	elseif msgType == 'kill' then
+		local _, _, _, x, y = message:find("<(%a+)><(%d+)><(%d+)>")
+		x = tonumber(x); y = tonumber(y)
+
+		vars.board[y][x] = nil
+	elseif msgType == 'restart' then
+		vars.resetBoard()
+		vars.turn = 'white'
 	end
 end
 
@@ -96,8 +114,7 @@ function playing.keypressed(key, scancode, isrepeat)
 	if key == "escape" then
 		vars.gameState = "menu"
 	elseif key == 'r' then
-		vars.resetBoard()
-		vars.turn = 'white'
+		restart()
 	end
 end
 
@@ -130,7 +147,7 @@ function playing.mousepressed(x, y, button)
 			move(selected[1], selected[2], x, y)
 			local result = validMove(selected[1], selected[2], x, y)
 			if result ~= true then -- houve peça comida
-				vars.board[result[2]][result[1]] = nil
+				kill(result[1], result[2])
 			end
 			selected = {}
 		else -- movimento invalido, tirar selecionamento
