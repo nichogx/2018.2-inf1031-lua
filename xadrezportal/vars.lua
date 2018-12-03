@@ -31,14 +31,14 @@ vars.gameState = "loading"
 vars.board = {} -- tabuleiro (indexado ao contrário do love: primeiro linha, depois coluna)
 function vars.resetBoard()
 	vars.board = { -- tabuleiro (indexado ao contrário do love: primeiro linha, depois coluna)
-		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
-		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
-		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
-		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
-		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
-		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
-		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><bpawn>", nil, nil},
-		{nil, nil, "<black><bpawn>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil}
+		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><breg>", nil, nil},
+		{nil, nil, "<black><breg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
+		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><breg>", nil, nil},
+		{nil, nil, "<black><breg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
+		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><breg>", nil, nil},
+		{nil, nil, "<black><breg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil},
+		{nil, nil, nil, "<black><reg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><breg>", nil, nil},
+		{nil, nil, "<black><breg>", nil, "<black><reg>", nil, nil, nil, "<white><reg>", nil, "<white><reg>", nil, nil, nil}
 	}
 end
 vars.resetBoard()
@@ -50,7 +50,8 @@ vars.genImages = {}   -- tabela onde serão inseridas as imagens gerais
 vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
 	"white_fpawn", "white_bpawn", "white_rook", "white_knight", "white_bishop", 
 	"white_king", "white_queen", "black_fpawn", "black_bpawn", "black_rook", 
-	"black_knight", "black_bishop", "black_king", "black_queen", "black_reg", "white_reg"
+	"black_knight", "black_bishop", "black_king", "black_queen", "black_reg", "white_reg",
+	"white_breg", "black_breg"
 }
 vars.genImagesToLoad = {
 	"logo"

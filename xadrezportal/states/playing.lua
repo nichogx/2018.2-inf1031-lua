@@ -25,15 +25,24 @@ Contém:
 ]]--
 
 local coisa = {0, 0} -- TODO TIRAR
+local hungry = false
+
+-- funções estão no final
+local validMove
+local validMoveNoEatables
+local getEatables
+local getOptions
 
 local function move(src1, src2, dest1, dest2)
 	local str = string.format('<move><%s><%d><%d><%d><%d>', vars.player, src1, src2, dest1, dest2)
 	msgr.sendMessage(str, 'portalchess01020304')
+	hungry = false
 end
 
 local function kill(x, y)
 	local str = string.format('<kill><%d><%d>', x, y)
 	msgr.sendMessage(str, 'portalchess01020304')
+	hungry = true
 end
 
 local function restart()
@@ -51,8 +60,13 @@ function playing.msgReceived(message)
 		vars.board[src2][src1] = nil
 
 		-- trocar a vez segundo critérios
-		if player == 'white' then vars.turn = 'black'
-		else vars.turn = 'white' end
+		if not hungry or #getEatables(dest1, dest2, getOptions(dest1, dest2)) == 0 then -- não pode comer, trocar de vez
+			if player == 'white' then -- TODO falta ver se pode andar pra frente ou pra trás...
+				vars.turn = 'black'
+			else 
+				vars.turn = 'white' 
+			end
+		end
 	elseif msgType == 'kill' then
 		local _, _, _, x, y = message:find("<(%a+)><(%d+)><(%d+)>")
 		x = tonumber(x); y = tonumber(y)
@@ -71,7 +85,12 @@ function playing.draw()
 	end
 	lg.print(coisa[1], 15, 15 * 5)
 	lg.print(coisa[2], 15, 15 * 6) -- TODO TIRAR
-
+	if selected[1] then
+		lg.print(selected[1], 15, 15 * 7) -- TODO TIRAR
+	end
+	if selected[2] then
+		lg.print(selected[2], 15, 15 * 8) -- TODO TIRAR
+	end
 	lg.push()
 	local ratio = vars.glW/vars.glH
 	local ppH = 12 -- peça por height
@@ -118,11 +137,6 @@ function playing.keypressed(key, scancode, isrepeat)
 	end
 end
 
--- funções estão no final
-local validMove
-local validMoveNoEatables
-local getEatables
-
 function playing.mousepressed(x, y, button)
 	local ratio = vars.glW/vars.glH
 	local ppH = 12 -- peça por height
@@ -158,7 +172,7 @@ function playing.mousepressed(x, y, button)
 	end
 end
 
-validMoveNoEatables = function(srcX, srcY, destX, destY)
+validMoveNoEatables = function(srcX, srcY, destX, destY, disconsider)
 	if (destX + destY) % 2 == 0 or vars.board[destY][destX] then 
 		return false
 	end	
@@ -168,6 +182,22 @@ validMoveNoEatables = function(srcX, srcY, destX, destY)
 		return false
 	end
 	
+	if not disconsider then
+		local _, _, teamcolor, piecetype = vars.board[srcY][srcX]:find("<(%a+)><(%a+)>")
+
+		if teamcolor == 'black' then
+			if (piecetype == 'reg'  and destX - srcX < 0)
+			or (piecetype == 'breg' and destX - srcX > 0) then
+				return false
+			end
+		else
+			if (piecetype == 'reg'  and destX - srcX > 0)
+			or (piecetype == 'breg' and destX - srcX < 0) then
+				return false
+			end
+		end
+	end
+		
 	return true
 end
 
@@ -179,7 +209,7 @@ getEatables = function(srcX, srcY, opt)
 		if vars.board[y][x] then
 			local _, _, teamcolor = vars.board[y][x]:find("<(%a+)>")
 			if teamcolor ~= vars.player
-			and validMoveNoEatables(x, y, x + (x - srcX), y + (y - srcY)) then
+			and validMoveNoEatables(x, y, x + (x - srcX), y + (y - srcY), true) then
 				eatables[#eatables + 1] = {x, y, x + (x - srcX), y + (y - srcY)}
 			end
 		end
@@ -188,11 +218,26 @@ getEatables = function(srcX, srcY, opt)
 end
 
 getOptions = function(srcX, srcY)
+	if not vars.board[srcY] or not vars.board[srcY][srcX] then
+		return {}
+	end
+	
+	local _, _, teamcolor, piecetype = vars.board[srcY][srcX]:find("<(%a+)><(%a+)>")
+	
+	local mod = 1
+	if teamcolor == 'black' then mod = -1 end
+	
 	local opt = {}
-	opt[1] = {srcX + 1, srcY + 1}
-	opt[2] = {srcX - 1, srcY + 1}
-	opt[3] = {srcX + 1, srcY - 1}
-	opt[4] = {srcX - 1, srcY - 1}
+	if piecetype ~= 'reg' then -- breg ou dama
+		opt[#opt + 1] = {srcX + 1 * mod, srcY + 1}
+		opt[#opt + 1] = {srcX + 1 * mod, srcY - 1}
+	end
+	
+	if piecetype ~= 'breg' then -- reg ou dama
+		opt[#opt + 1] = {srcX - 1 * mod, srcY + 1}
+		opt[#opt + 1] = {srcX - 1 * mod, srcY - 1}
+	end
+	
 	
 	for i = 1, #opt do
 		if opt[i][1] > 14 then opt[i][1] = opt[i][1] % 14 end
@@ -203,7 +248,7 @@ getOptions = function(srcX, srcY)
 		end
 	end
 
-	local j=0
+	local j = 0
 	for i = 1, #opt do
 		if opt[i] ~= nil then
 			j = j + 1
@@ -245,7 +290,7 @@ validMove = function(srcX, srcY, destX, destY)
 		end
 	end
 
-	return validMoveNoEatables(srcX, srcY, destX, destY)
+	return validMoveNoEatables(srcX, srcY, destX, destY, false)
 end
 
 -- modulo
