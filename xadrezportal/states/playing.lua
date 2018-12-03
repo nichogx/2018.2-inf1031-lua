@@ -128,6 +128,10 @@ function playing.mousepressed(x, y, button)
 		and validMove(selected[1], selected[2], x, y) then -- movimento válido, mover
 			if x > 14 then x = x % 14 end			
 			move(selected[1], selected[2], x, y)
+			local result = validMove(selected[1], selected[2], x, y)
+			if result ~= true then -- houve peça comida
+				vars.board[result[2]][result[1]] = nil
+			end
 			selected = {}
 		else -- movimento invalido, tirar selecionamento
 			selected = {}
@@ -160,14 +164,13 @@ getEatables = function(srcX, srcY, opt)
 			if teamcolor ~= vars.player
 			and validMoveNoEatables(x, y, x + (x - srcX), y + (y - srcY)) then
 				eatables[#eatables + 1] = {x, y, x + (x - srcX), y + (y - srcY)}
-				print(x, y, x + (x - srcX), y + (y - srcY))
 			end
 		end
 	end
 	return eatables
 end
 
-validMove = function(srcX, srcY, destX, destY)
+getOptions = function(srcX, srcY)
 	local opt = {}
 	opt[1] = {srcX + 1, srcY + 1}
 	opt[2] = {srcX - 1, srcY + 1}
@@ -177,7 +180,28 @@ validMove = function(srcX, srcY, destX, destY)
 	for i = 1, #opt do
 		if opt[i][1] > 14 then opt[i][1] = opt[i][1] % 14 end
 		if opt[i][1] < 1  then opt[i][1] = 14 - opt[i][1] end
+
+		if opt[i][2] > 8 or opt[i][2] < 1 then
+			opt[i] = nil
+		end
 	end
+
+	local j=0
+	for i = 1, #opt do
+		if opt[i] ~= nil then
+			j = j + 1
+			opt[j] = opt[i]
+		end
+	end
+	for i = j + 1, #opt do
+		opt[i] = nil
+	end
+
+	return opt
+end
+
+validMove = function(srcX, srcY, destX, destY)
+	local opt = getOptions(srcX, srcY)
 	
 	-- da pra comer?
 	local eatables = getEatables(srcX, srcY, opt)
@@ -190,6 +214,18 @@ validMove = function(srcX, srcY, destX, destY)
 		end
 
 		return false
+	end
+
+	-- existem outras peças que podem comer?
+	for i = 1, 8 do
+		for j = 1, 14 do
+			if vars.board[i][j] then
+				local _, _, teamcolor = vars.board[i][j]:find("<(%a+)>")
+				if teamcolor == vars.player and #getEatables(j, i, getOptions(j, i)) ~= 0 then
+					return false
+				end
+			end
+		end
 	end
 
 	return validMoveNoEatables(srcX, srcY, destX, destY)
