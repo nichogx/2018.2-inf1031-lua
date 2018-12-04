@@ -217,6 +217,10 @@ getEatables = function(srcX, srcY, opt)
 				theX = 2
 			elseif srcX == 1 and x == 14 then
 				theX = 13
+			elseif srcX == 13 and x == 14 then
+				theX = 1
+			elseif srcX == 2 and x == 1 then
+				theX = 14
 			end
 
 			if teamcolor ~= vars.player
