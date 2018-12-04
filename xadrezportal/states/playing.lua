@@ -87,6 +87,9 @@ function playing.draw()
 	lg.print(coisa[2], 15, 15 * 6) -- TODO TIRAR
 	if selected[1] then
 		lg.print(selected[1], 15, 15 * 7) -- TODO TIRAR
+		for i, v in ipairs(getOptions(selected[1], selected[2])) do
+			print(v[1], v[2], 0, 128, 128) -- desenha retangulo
+		end
 	end
 	if selected[2] then
 		lg.print(selected[2], 15, 15 * 8) -- TODO TIRAR
@@ -173,7 +176,7 @@ function playing.mousepressed(x, y, button)
 end
 
 validMoveNoEatables = function(srcX, srcY, destX, destY, disconsider)
-	if (destX + destY) % 2 == 0 or vars.board[destY][destX] then 
+	if (destX + destY) % 2 == 0 or (vars.board[destY] and vars.board[destY][destX]) then 
 		return false
 	end	
 	
@@ -186,13 +189,13 @@ validMoveNoEatables = function(srcX, srcY, destX, destY, disconsider)
 		local _, _, teamcolor, piecetype = vars.board[srcY][srcX]:find("<(%a+)><(%a+)>")
 
 		if teamcolor == 'black' then
-			if (piecetype == 'reg'  and destX - srcX < 0)
-			or (piecetype == 'breg' and destX - srcX > 0) then
+			if (piecetype == 'reg'  and (destX - srcX < 0 and destX - srcX ~= -13))
+			or (piecetype == 'breg' and (destX - srcX > 0 and destX - srcX ~= 13)) then
 				return false
 			end
 		else
-			if (piecetype == 'reg'  and destX - srcX > 0)
-			or (piecetype == 'breg' and destX - srcX < 0) then
+			if (piecetype == 'reg'  and (destX - srcX > 0 and destX - srcX ~= 13))
+			or (piecetype == 'breg' and (destX - srcX < 0 and destX - srcX ~= -13)) then
 				return false
 			end
 		end
@@ -208,9 +211,17 @@ getEatables = function(srcX, srcY, opt)
 		local y = opt[i][2]
 		if vars.board[y][x] then
 			local _, _, teamcolor = vars.board[y][x]:find("<(%a+)>")
+
+			local theX = x + (x - srcX)
+			if srcX == 14 and x == 1 then
+				theX = 2
+			elseif srcX == 1 and x == 14 then
+				theX = 13
+			end
+
 			if teamcolor ~= vars.player
-			and validMoveNoEatables(x, y, x + (x - srcX), y + (y - srcY), true) then
-				eatables[#eatables + 1] = {x, y, x + (x - srcX), y + (y - srcY)}
+			and validMoveNoEatables(x, y, theX, y + (y - srcY), true) then
+				eatables[#eatables + 1] = {x, y, theX, y + (y - srcY)}
 			end
 		end
 	end
@@ -274,7 +285,6 @@ validMove = function(srcX, srcY, destX, destY)
 				return {eatables[i][1], eatables[i][2]}
 			end
 		end
-
 		return false
 	end
 
@@ -283,7 +293,7 @@ validMove = function(srcX, srcY, destX, destY)
 		for j = 1, 14 do
 			if vars.board[i][j] then
 				local _, _, teamcolor = vars.board[i][j]:find("<(%a+)>")
-				if teamcolor == vars.player and #getEatables(j, i, getOptions(j, i)) ~= 0 then
+				if teamcolor == vars.player and #getEatables(j, i, getOptions(j, i)) ~= 0 then				
 					return false
 				end
 			end
