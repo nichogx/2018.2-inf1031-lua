@@ -51,16 +51,27 @@ vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
 	"white_fpawn", "white_bpawn", "white_rook", "white_knight", "white_bishop", 
 	"white_king", "white_queen", "black_fpawn", "black_bpawn", "black_rook", 
 	"black_knight", "black_bishop", "black_king", "black_queen", "black_reg", "white_reg",
-	"white_breg", "black_breg"
+	"white_breg", "black_breg", "black_crown", "white_crown"
 }
 vars.genImagesToLoad = {
 	"logo"
 }
 
+vars.winnerStuff = {
+	font = nil,
+	text = nil,
+	restartFont = nil,
+	restartText = nil
+}
+
+vars.deffont = nil
+
 vars.loaded = 0
 vars.loadsteps = 
 	  #vars.pieceImagesToLoad -- imagens das peças
 	+ #vars.genImagesToLoad   -- imagem do menu
+	+ 4                       -- textos de win
+	+ 1                       -- default font
 
 -- modulo
 return vars

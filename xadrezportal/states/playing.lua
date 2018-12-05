@@ -26,6 +26,8 @@ Contém:
 
 local coisa = {0, 0} -- TODO TIRAR
 local hungry = false
+local points = { black = 0, white = 0 }
+local winner = nil
 
 -- funções estão no final
 local validMove
@@ -39,8 +41,8 @@ local function move(src1, src2, dest1, dest2)
 	hungry = false
 end
 
-local function kill(x, y)
-	local str = string.format('<kill><%d><%d>', x, y)
+local function kill(x, y, team)
+	local str = string.format('<kill><%s><%d><%d>', team, x, y)
 	msgr.sendMessage(str, 'portalchess01020304')
 	hungry = true
 end
@@ -61,39 +63,47 @@ function playing.msgReceived(message)
 
 		-- trocar a vez segundo critérios
 		if not hungry or #getEatables(dest1, dest2, getOptions(dest1, dest2)) == 0 then -- não pode comer, trocar de vez
-			if player == 'white' then -- TODO falta ver se pode andar pra frente ou pra trás...
+			if player == 'white' then
 				vars.turn = 'black'
 			else 
 				vars.turn = 'white' 
 			end
 		end
+
+		if player == 'white' and dest1 == 4 then
+			vars.board[dest2][dest1] = '<white><crown>'
+		end
+		if player == 'black' and dest1 == 11 then
+			vars.board[dest2][dest1] = '<black><crown>'
+		end
 	elseif msgType == 'kill' then
-		local _, _, _, x, y = message:find("<(%a+)><(%d+)><(%d+)>")
+		local _, _, _, team, x, y = message:find("<(%a+)><(%a+)><(%d+)><(%d+)>")
 		x = tonumber(x); y = tonumber(y)
+		points[team] = points[team] + 1
+
+		if points[team] >= 16 then
+			winner = team
+		end
 
 		vars.board[y][x] = nil
 	elseif msgType == 'restart' then
 		vars.resetBoard()
 		vars.turn = 'white'
+		winner = nil
+		points = { black = 0, white = 0 }
+		hungry = false
 	end
 end
 
 function playing.draw()
+	lg.setFont(vars.deffont)
 	lg.setColor(1, 1, 1)
 	for i, v in ipairs(vars.cfgs) do
 		lg.print(v, 15, 15 * i)
 	end
 	lg.print(coisa[1], 15, 15 * 5)
 	lg.print(coisa[2], 15, 15 * 6) -- TODO TIRAR
-	if selected[1] then
-		lg.print(selected[1], 15, 15 * 7) -- TODO TIRAR
-		for i, v in ipairs(getOptions(selected[1], selected[2])) do
-			print(v[1], v[2], 0, 128, 128) -- desenha retangulo
-		end
-	end
-	if selected[2] then
-		lg.print(selected[2], 15, 15 * 8) -- TODO TIRAR
-	end
+
 	lg.push()
 	local ratio = vars.glW/vars.glH
 	local ppH = 12 -- peça por height
@@ -126,6 +136,18 @@ function playing.draw()
 	end
 
 	lg.pop()
+
+	if winner then
+		lg.setColor(0, 0, 0, 0.7) -- cor do texto winner
+		lg.rectangle("fill", 0, 0, vars.glW, vars.glH)
+		vars.winnerStuff.text:set(winner .. " ganhou o jogo!", vars.glW - 200)
+
+		lg.setColor(1, 1, 1) -- cor do texto winner
+		txtW, txtH = vars.winnerStuff.text:getDimensions()
+		lg.draw(vars.winnerStuff.text, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 - vars.glH/10)
+		txtW, txtH = vars.winnerStuff.restartText:getDimensions()
+		lg.draw(vars.winnerStuff.restartText, vars.glW/2 - txtW/2, vars.glH/2 - txtH/2 + vars.glH/10)
+	end
 end
 
 function playing.update(dt)
@@ -137,6 +159,10 @@ function playing.keypressed(key, scancode, isrepeat)
 		vars.gameState = "menu"
 	elseif key == 'r' then
 		restart()
+	elseif key == 'w' then -- TODO tirar
+		winner = 'white'
+	elseif key == 'b' then
+		winner = 'black'
 	end
 end
 
@@ -164,7 +190,7 @@ function playing.mousepressed(x, y, button)
 			move(selected[1], selected[2], x, y)
 			local result = validMove(selected[1], selected[2], x, y)
 			if result ~= true then -- houve peça comida
-				kill(result[1], result[2])
+				kill(result[1], result[2], team)
 			end
 			selected = {}
 		else -- movimento invalido, tirar selecionamento
@@ -178,7 +204,11 @@ end
 validMoveNoEatables = function(srcX, srcY, destX, destY, disconsider)
 	if (destX + destY) % 2 == 0 or (vars.board[destY] and vars.board[destY][destX]) then 
 		return false
-	end	
+	end
+
+	if destY > 8 or destY < 1 then
+		return false
+	end
 	
 	if (math.abs(srcX - destX) > 1 and math.abs(srcX - destX) < 13)
 	or math.abs(srcY - destY) > 1 then

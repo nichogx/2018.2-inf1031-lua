@@ -66,12 +66,43 @@ function loading.draw()
 end
 
 function loading.update(dt)
+	if not vars.winnerStuff.font then
+		vars.winnerStuff.font = lg.newFont("resources/Lato-Font/Lato-Black.ttf", 100)
+		vars.loaded = vars.loaded + 1
+		return
+	end
+
+	if not vars.winnerStuff.text then
+		vars.winnerStuff.text = lg.newText(vars.winnerStuff.font, "<no_winner>")
+		vars.loaded = vars.loaded + 1
+		return
+	end
+
+	if not vars.winnerStuff.restartFont then
+		vars.winnerStuff.restartFont = lg.newFont("resources/Lato-Font/Lato-Black.ttf", 40)
+		vars.loaded = vars.loaded + 1
+		return
+	end
+
+	if not vars.winnerStuff.restartText then
+		vars.winnerStuff.restartText = lg.newText(vars.winnerStuff.restartFont, "aperte R para recomeçar")
+		vars.loaded = vars.loaded + 1
+		return
+	end
+
+	if not vars.deffont then
+		vars.deffont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 15)
+		vars.loaded = vars.loaded + 1
+		return
+	end
+
 	if #vars.genImagesToLoad > 0 then
 		local name = table.remove(vars.genImagesToLoad, 1)
 		vars.genImages[name] = lg.newImage("resources/" .. name .. ".png")
 		vars.loaded = vars.loaded + 1
 		return
 	end
+
 	if #vars.pieceImagesToLoad > 0 then
 		local name = table.remove(vars.pieceImagesToLoad, 1)
 		vars.pieceImages[name] = lg.newImage("resources/pieces/" .. name .. ".png");
