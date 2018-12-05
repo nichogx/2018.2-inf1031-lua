@@ -70,10 +70,11 @@ function playing.msgReceived(message)
 			end
 		end
 
-		if player == 'white' and dest1 == 4 then
+		local _, _, player, piece = vars.board[dest2][dest1]:find("<(%a+)><(%a+)>")
+		if player == 'white' and ((piece == 'reg' and dest1 <= 4) or (piece == 'breg' and dest1 >= 4 and dest1 < 12)) then
 			vars.board[dest2][dest1] = '<white><crown>'
 		end
-		if player == 'black' and dest1 == 11 then
+		if player == 'black' and ((piece == 'reg' and dest1 >= 11) or (piece == 'breg' and dest1 <= 11 and dest1 > 3)) then
 			vars.board[dest2][dest1] = '<black><crown>'
 		end
 	elseif msgType == 'kill' then
@@ -101,8 +102,11 @@ function playing.draw()
 	for i, v in ipairs(vars.cfgs) do
 		lg.print(v, 15, 15 * i)
 	end
-	lg.print(coisa[1], 15, 15 * 5)
-	lg.print(coisa[2], 15, 15 * 6) -- TODO TIRAR
+	lg.print('WHITE: ' .. points.black .. ' pontos', 15, 15 * 4)
+	lg.print('BLACK: ' .. points.white .. ' pontos', 15, 15 * 5)
+	lg.print('VEZ DE: ' .. vars.turn, 15, 15 * 6)
+	lg.print(coisa[1], 15, 15 * 7)
+	lg.print(coisa[2], 15, 15 * 8) -- TODO TIRAR
 
 	lg.push()
 	local ratio = vars.glW/vars.glH

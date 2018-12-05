@@ -21,8 +21,7 @@ vars.fullscreen = false
 
 vars.cfgs = {
 	"esc - Sair",
-	"R - Recomeçar",
-	"H - Habilitar/desabilitar modo help"
+	"R - Recomeçar"
 }
 
 -- coloca no estado inicial
