@@ -95,6 +95,12 @@ function loading.update(dt)
 		vars.loaded = vars.loaded + 1
 		return
 	end
+	
+	if #vars.bgImages < 16 then
+		vars.bgImages[#vars.bgImages + 1] = lg.newImage("resources/background/" .. #vars.bgImages .. ".png");
+		vars.loaded = vars.loaded + 1
+		return
+	end
 
 	if #vars.genImagesToLoad > 0 then
 		local name = table.remove(vars.genImagesToLoad, 1)
@@ -109,12 +115,6 @@ function loading.update(dt)
 		vars.loaded = vars.loaded + 1
 		return
   	end
-
-	if #vars.bgImages < 16 then
-		vars.bgImages[#vars.bgImages + 1] = lg.newImage("resources/background/" .. #vars.bgImages .. ".png");
-		vars.loaded = vars.loaded + 1
-		return
-	end
 
 	math.randomseed(os.time())
 	msgr.start("portalchess01020304" .. math.random(9999), "portalchess01020304",  msgReceived)

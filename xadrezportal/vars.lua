@@ -49,10 +49,8 @@ vars.bgImages = {}    -- tabela onde serão inseridas as imgaens de background (
 
 -- configuração do loading
 vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
-	"white_fpawn", "white_bpawn", "white_rook", "white_knight", "white_bishop", 
-	"white_king", "white_queen", "black_fpawn", "black_bpawn", "black_rook", 
-	"black_knight", "black_bishop", "black_king", "black_queen", "black_reg", "white_reg",
-	"white_breg", "black_breg", "black_crown", "white_crown"
+	"black_reg", "white_reg", "white_breg", "black_breg", 
+	"black_crown", "white_crown"
 }
 vars.genImagesToLoad = {
 	"logo"
