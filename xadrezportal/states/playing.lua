@@ -27,6 +27,7 @@ Contém:
 local hungry = false
 local points = { black = 0, white = 0 }
 local winner = nil
+local actBG = 1
 
 -- funções estão no final
 local validMove
@@ -109,14 +110,20 @@ function playing.msgReceived(message)
 end
 
 function playing.draw()
+	lg.setColor(1, 1, 1)
+	local dimW, dimH = vars.bgImages[actBG]:getDimensions()
+	lg.draw(vars.bgImages[actBG], -200, 0, 0, vars.glW/dimW * 1.2)
+	lg.setColor(0, 0, 0, 0.4) -- deixar mais escuro
+	lg.rectangle("fill", 0, 0, vars.glW, vars.glH)
+
 	lg.setFont(vars.deffont)
 	lg.setColor(1, 1, 1)
 	for i, v in ipairs(vars.cfgs) do
-		lg.print(v, 15, 15 * i)
+		lg.print(v, 15, 20 * i)
 	end
-	lg.print('WHITE: ' .. points.white .. ' pontos', 15, 15 * (#vars.cfgs + 2))
-	lg.print('BLACK: ' .. points.black .. ' pontos', 15, 15 * (#vars.cfgs + 3))
-	lg.print('VEZ DE: ' .. vars.turn, 15, 15 * (#vars.cfgs + 5))
+	lg.print('WHITE: ' .. points.white .. ' pontos', 15, 20 * (#vars.cfgs + 2))
+	lg.print('BLACK: ' .. points.black .. ' pontos', 15, 20 * (#vars.cfgs + 3))
+	lg.print('VEZ DE: ' .. vars.turn, 15, 20 * (#vars.cfgs + 5))
 
 	lg.push()
 	local ratio = vars.glW/vars.glH
@@ -168,8 +175,17 @@ function playing.draw()
 	end
 end
 
+local dtacum = 0
 function playing.update(dt)
+	dtacum = dtacum + dt
 	msgr.checkMessages()
+	if dtacum >= 0.1 then
+		actBG = actBG + 1
+		dtacum = 0
+		if actBG > 16 then
+			actBG = 1
+		end
+	end
 end
 
 function playing.keypressed(key, scancode, isrepeat)

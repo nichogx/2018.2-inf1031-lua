@@ -45,6 +45,7 @@ vars.resetBoard()
 
 vars.pieceImages = {} -- tabela onde serão inseridas as imagens das peças
 vars.genImages = {}   -- tabela onde serão inseridas as imagens gerais
+vars.bgImages = {}    -- tabela onde serão inseridas as imgaens de background (são 16, animado)
 
 -- configuração do loading
 vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
@@ -72,6 +73,7 @@ vars.loadsteps =
 	+ #vars.genImagesToLoad   -- imagem do menu
 	+ 4                       -- textos de win
 	+ 1                       -- default font
+	+ 16                      -- imagens do background animado
 
 -- modulo
 return vars

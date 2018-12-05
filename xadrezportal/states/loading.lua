@@ -91,7 +91,7 @@ function loading.update(dt)
 	end
 
 	if not vars.deffont then
-		vars.deffont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 15)
+		vars.deffont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 18)
 		vars.loaded = vars.loaded + 1
 		return
 	end
@@ -109,6 +109,12 @@ function loading.update(dt)
 		vars.loaded = vars.loaded + 1
 		return
   	end
+
+	if #vars.bgImages < 16 then
+		vars.bgImages[#vars.bgImages + 1] = lg.newImage("resources/background/" .. #vars.bgImages .. ".png");
+		vars.loaded = vars.loaded + 1
+		return
+	end
 
 	math.randomseed(os.time())
 	msgr.start("portalchess01020304" .. math.random(9999), "portalchess01020304",  msgReceived)
