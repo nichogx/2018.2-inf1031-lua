@@ -189,6 +189,7 @@ function playing.mousepressed(x, y, button)
 			if x > 14 then x = x % 14 end			
 			move(selected[1], selected[2], x, y)
 			local result = validMove(selected[1], selected[2], x, y)
+			local _, _, team = vars.board[selected[2]][selected[1]]:find("<(%a+)>")
 			if result ~= true then -- houve peça comida
 				kill(result[1], result[2], team)
 			end
