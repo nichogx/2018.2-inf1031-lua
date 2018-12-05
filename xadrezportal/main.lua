@@ -28,6 +28,7 @@ function love.update(dt)
 end
 
 function love.load()
+	love.window.setTitle("PORTAL CHECKERS v1.0")
 	love.window.setMode(1280, 720)
 	love.window.setFullscreen(vars.fullscreen)
 	vars.glW = lg.getWidth()

@@ -21,7 +21,8 @@ vars.fullscreen = false
 
 vars.cfgs = {
 	"esc - Sair",
-	"R - Recomeçar"
+	"R - Recomeçar",
+	"F - Finalizar jogo"
 }
 
 -- coloca no estado inicial

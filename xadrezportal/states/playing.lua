@@ -20,11 +20,10 @@ Contém:
   playing.draw()
   playing.update()
   playing.keypressed()
-  playing.mousepressed() -- TODO ATUALIZAR TODOS ESSES e colocar título na janela
+  playing.mousepressed()
 
 ]]--
 
-local coisa = {0, 0} -- TODO TIRAR
 local hungry = false
 local points = { black = 0, white = 0 }
 local winner = nil
@@ -49,6 +48,11 @@ end
 
 local function restart()
 	local str = string.format('<restart>')
+	msgr.sendMessage(str, 'portalchess01020304')
+end
+
+local function finalizar()
+	local str = string.format('<end>')
 	msgr.sendMessage(str, 'portalchess01020304')
 end
 
@@ -93,6 +97,14 @@ function playing.msgReceived(message)
 		winner = nil
 		points = { black = 0, white = 0 }
 		hungry = false
+	elseif msgType == 'end' then
+		if points.black > points.white then
+			winner = 'black'
+		elseif points.white > points.black then
+			winner = 'white'
+		else
+			winner = 'empate'
+		end
 	end
 end
 
@@ -102,11 +114,9 @@ function playing.draw()
 	for i, v in ipairs(vars.cfgs) do
 		lg.print(v, 15, 15 * i)
 	end
-	lg.print('WHITE: ' .. points.black .. ' pontos', 15, 15 * 4)
-	lg.print('BLACK: ' .. points.white .. ' pontos', 15, 15 * 5)
-	lg.print('VEZ DE: ' .. vars.turn, 15, 15 * 6)
-	lg.print(coisa[1], 15, 15 * 7)
-	lg.print(coisa[2], 15, 15 * 8) -- TODO TIRAR
+	lg.print('WHITE: ' .. points.white .. ' pontos', 15, 15 * (#vars.cfgs + 2))
+	lg.print('BLACK: ' .. points.black .. ' pontos', 15, 15 * (#vars.cfgs + 3))
+	lg.print('VEZ DE: ' .. vars.turn, 15, 15 * (#vars.cfgs + 5))
 
 	lg.push()
 	local ratio = vars.glW/vars.glH
@@ -144,7 +154,11 @@ function playing.draw()
 	if winner then
 		lg.setColor(0, 0, 0, 0.7) -- cor do texto winner
 		lg.rectangle("fill", 0, 0, vars.glW, vars.glH)
-		vars.winnerStuff.text:set(winner .. " ganhou o jogo!", vars.glW - 200)
+		if winner == 'empate' then
+			vars.winnerStuff.text:set("empate!", vars.glW - 200)
+		else
+			vars.winnerStuff.text:set(winner .. " ganhou o jogo!", vars.glW - 200)
+		end
 
 		lg.setColor(1, 1, 1) -- cor do texto winner
 		txtW, txtH = vars.winnerStuff.text:getDimensions()
@@ -163,10 +177,8 @@ function playing.keypressed(key, scancode, isrepeat)
 		vars.gameState = "menu"
 	elseif key == 'r' then
 		restart()
-	elseif key == 'w' then -- TODO tirar
-		winner = 'white'
-	elseif key == 'b' then
-		winner = 'black'
+	elseif key == 'f' then
+		finalizar()
 	end
 end
 
@@ -175,8 +187,6 @@ function playing.mousepressed(x, y, button)
 	local ppH = 12 -- peça por height
 	local x = math.floor(x/(vars.glW/(ratio * ppH)) + 1/3 + 1) - 4 -- começa no 4
 	local y = math.floor(y/(vars.glH/ppH) + 1) - 2 -- começa no 2
-	
-	coisa = {x, y} -- TODO TIRAR
 	
 	if x >= 1 and x <= 14 
 	and y >= 1 and y <= 8 
