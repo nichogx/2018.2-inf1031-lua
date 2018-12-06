@@ -157,7 +157,17 @@ function playing.draw()
 	end
 
 	lg.pop()
-
+	lg.push()
+	
+	lg.translate(vars.glW/2, vars.glH/2)
+	lg.setColor(1, 1, 1)
+	local borderW = vars.genImages.border:getWidth()
+	local borderH = vars.genImages.border:getHeight()
+	local scale = vars.glH/borderH - 2/9 * vars.glH/borderH
+	lg.draw(vars.genImages.border, 0, 0, 0, scale, scale, borderW/2, borderH/2)
+	
+	lg.pop()
+	
 	if winner then
 		lg.setColor(0, 0, 0, 0.7) -- cor do texto winner
 		lg.rectangle("fill", 0, 0, vars.glW, vars.glH)

@@ -17,8 +17,6 @@ vars.glH = 0
 vars.player = 'white'
 vars.turn   = 'white'
 
-vars.fullscreen = false
-
 vars.cfgs = {
 	"esc - Sair",
 	"R - Recomeçar",
@@ -53,7 +51,7 @@ vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
 	"black_crown", "white_crown"
 }
 vars.genImagesToLoad = {
-	"logo"
+	"logo", "border"
 }
 
 vars.winnerStuff = {

@@ -44,22 +44,7 @@ fillMenu = function()
 			else vars.player = 'white' end
 
 			menuoptions[3].text:set('player: ' .. vars.player)
-		end),
-		newMenuText(4, "fullscreen: " .. tostring(vars.fullscreen), function () -- // TODO deixar bom ou tirar
-			vars.fullscreen = not vars.fullscreen
-			if vars.fullscreen then
-				love.window.setMode(0, 0)
-				vars.glW, vars.glH = lg.getDimensions()
-			else
-				love.window.setMode(1280, 720)
-				vars.glW, vars.glH = lg.getDimensions()
-			end
-			fillMenu()
-			menuoptions[4].selected = true;
-			love.window.setFullscreen(vars.fullscreen)
-
-			menuoptions[4].text:set('fullscreen: ' .. tostring(vars.fullscreen))
-		end),
+		end)
 	}
 end
 
