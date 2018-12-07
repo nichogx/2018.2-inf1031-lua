@@ -41,9 +41,10 @@ function vars.resetBoard()
 end
 vars.resetBoard()
 
-vars.pieceImages = {} -- tabela onde serão inseridas as imagens das peças
-vars.genImages = {}   -- tabela onde serão inseridas as imagens gerais
-vars.bgImages = {}    -- tabela onde serão inseridas as imgaens de background (são 16, animado)
+vars.pieceImages = {}  -- tabela onde serão inseridas as imagens das peças
+vars.genImages = {}    -- tabela onde serão inseridas as imagens gerais
+vars.bgImages = {}     -- tabela onde serão inseridas as imgaens de background (são 16, animado)
+vars.borderImages = {} -- tabela onde serão inseridas as imagens do tabuleiro (são 16, animado)
 
 -- configuração do loading
 vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
@@ -51,7 +52,7 @@ vars.pieceImagesToLoad = { -- imagens de peças que serão inseridas
 	"black_crown", "white_crown"
 }
 vars.genImagesToLoad = {
-	"logo", "border"
+	"logo"
 }
 
 vars.winnerStuff = {
@@ -70,6 +71,7 @@ vars.loadsteps =
 	+ 4                       -- textos de win
 	+ 1                       -- default font
 	+ 16                      -- imagens do background animado
+	+ 16                      -- imagens do tabuleiro animado
 
 -- modulo
 return vars

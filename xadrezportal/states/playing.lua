@@ -27,7 +27,7 @@ Contém:
 local hungry = false
 local points = { black = 0, white = 0 }
 local winner = nil
-local actBG = 1
+local actFrame = 1
 
 -- funções estão no final
 local validMove
@@ -111,8 +111,8 @@ end
 
 function playing.draw()
 	lg.setColor(1, 1, 1)
-	local dimW, dimH = vars.bgImages[actBG]:getDimensions()
-	lg.draw(vars.bgImages[actBG], -200, 0, 0, vars.glW/dimW * 1.2)
+	local dimW, dimH = vars.bgImages[actFrame]:getDimensions()
+	lg.draw(vars.bgImages[actFrame], -200, 0, 0, vars.glW/dimW * 1.2)
 	lg.setColor(0, 0, 0, 0.4) -- deixar mais escuro
 	lg.rectangle("fill", 0, 0, vars.glW, vars.glH)
 
@@ -159,12 +159,13 @@ function playing.draw()
 	lg.pop()
 	lg.push()
 	
+	-- borda
 	lg.translate(vars.glW/2, vars.glH/2)
 	lg.setColor(1, 1, 1)
-	local borderW = vars.genImages.border:getWidth()
-	local borderH = vars.genImages.border:getHeight()
+	local borderW = vars.borderImages[1]:getWidth()
+	local borderH = vars.borderImages[1]:getHeight()
 	local scale = vars.glH/borderH - 2/9 * vars.glH/borderH
-	lg.draw(vars.genImages.border, 0, 0, 0, scale, scale, borderW/2, borderH/2)
+	lg.draw(vars.borderImages[actFrame], 0, 0, 0, scale, scale, borderW/2, borderH/2)
 	
 	lg.pop()
 	
@@ -190,10 +191,10 @@ function playing.update(dt)
 	dtacum = dtacum + dt
 	msgr.checkMessages()
 	if dtacum >= 0.1 then
-		actBG = actBG + 1
+		actFrame = actFrame + 1
 		dtacum = 0
-		if actBG > 16 then
-			actBG = 1
+		if actFrame > 16 then
+			actFrame = 1
 		end
 	end
 end

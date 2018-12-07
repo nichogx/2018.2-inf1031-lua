@@ -91,13 +91,19 @@ function loading.update(dt)
 	end
 
 	if not vars.deffont then
-		vars.deffont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 18)
+		vars.deffont = lg.newFont("resources/Lato-Font/Lato-Regular.ttf", 17)
 		vars.loaded = vars.loaded + 1
 		return
 	end
 	
 	if #vars.bgImages < 16 then
 		vars.bgImages[#vars.bgImages + 1] = lg.newImage("resources/background/" .. #vars.bgImages .. ".png");
+		vars.loaded = vars.loaded + 1
+		return
+	end
+	
+	if #vars.borderImages < 16 then
+		vars.borderImages[#vars.borderImages + 1] = lg.newImage("resources/border/" .. #vars.borderImages .. ".png");
 		vars.loaded = vars.loaded + 1
 		return
 	end
